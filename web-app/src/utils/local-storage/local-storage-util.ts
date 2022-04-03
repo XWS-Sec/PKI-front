@@ -3,11 +3,13 @@ import { LocalStorageItem } from './local-storage-item.enum';
 
 class LocalStorageUtil {
   public getUser(): User {
-    const accessToken = this.getAccessToken();
+    //const accessToken = this.getAccessToken();
+    const username = this.getUsername();
 
-    if (accessToken) {
+    //if (accessToken) {
+    if (username) {
       const user: User = {
-        accessToken: accessToken,
+        //accessToken: accessToken,
         loggedIn: true,
         id: this.getUserId(),
         username: this.getUsername(),
@@ -20,8 +22,8 @@ class LocalStorageUtil {
   }
 
   public setUser(user: User): void {
-    this.setAccessToken(user.accessToken);
-    this.setUserId(user.id);
+    //this.setAccessToken(user.accessToken);
+    //this.setUserId(user.id);
     this.setUsername(user.username);
   }
 

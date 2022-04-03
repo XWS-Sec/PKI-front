@@ -2,6 +2,7 @@ import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import AuthContext, { User } from '../context/auth-context';
+import { HttpStatusCode } from '../utils/http-status-code.enum';
 import localStorageUtil from '../utils/local-storage/local-storage-util';
 import { sleep } from '../utils/sleep';
 
@@ -33,7 +34,7 @@ const LoginPage = () => {
 
     if (username === 'fake_user' && password === 'fakepass123') {
       const user: User = {
-        accessToken: 'fake.access_token.123',
+        //accessToken: 'fake.access_token.123',
         loggedIn: true,
         id: 1,
         username: 'fake_user',
@@ -47,9 +48,44 @@ const LoginPage = () => {
     }
   };
 
-  const logIn = () => {
-    fakeLogin();
-    //TODO: implement real login
+  const logIn = async () => {
+    const url: string = '/api/login';
+    const data = { username: username, password: password };
+
+    setFetching(true);
+
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+
+    switch (response.status) {
+      case HttpStatusCode.OK:
+        setErrorText('');
+
+        const user: User = {
+          loggedIn: true,
+          username: username,
+        };
+
+        localStorageUtil.setUser(user);
+        authContext.updateAuthContext(user);
+
+        setFetching(false);
+        navigate('');
+        break;
+      case HttpStatusCode.BAD_REQUEST:
+        setFetching(false);
+        setErrorText('Invalid credentials.');
+        break;
+      default:
+        setFetching(false);
+        setErrorText('Unknown error occurred.');
+        break;
+    }
   };
 
   const signUp = () => {

@@ -1,14 +1,14 @@
 import React from 'react';
 
 export interface User {
-  accessToken: string;
+  //accessToken?: string;
   loggedIn: boolean;
-  id: number;
+  id?: number;
   username: string;
 }
 
 export const unsignedUser: User = {
-  accessToken: '',
+  //accessToken: '',
   loggedIn: false,
   id: -1,
   username: '',

@@ -1,6 +1,7 @@
 import { useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import AuthContext, { unsignedUser } from '../../context/auth-context';
+import { HttpStatusCode } from '../../utils/http-status-code.enum';
 import localStorageUtil from '../../utils/local-storage/local-storage-util';
 import MenuToggleButton from './MenuToggleButton';
 import './navbar-menu-animation.css';
@@ -28,11 +29,17 @@ const Menu = (props: { toggleMenu: () => void }) => {
     ));
   };
 
-  const signOut = () => {
-    localStorageUtil.setUser(unsignedUser);
-    authContext.updateAuthContext(unsignedUser);
-    navigate('');
-    props.toggleMenu();
+  const signOut = async () => {
+    const response = await fetch('/api/logout', { method: 'POST' });
+
+    if (response.status === HttpStatusCode.OK) {
+      localStorageUtil.setUser(unsignedUser);
+      authContext.updateAuthContext(unsignedUser);
+      navigate('');
+      props.toggleMenu();
+    } else {
+      alert('An error occurred.');
+    }
   };
 
   return (
