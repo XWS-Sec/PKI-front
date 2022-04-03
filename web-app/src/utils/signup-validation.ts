@@ -26,18 +26,18 @@ export default class SignupValidation {
     // eslint-disable-next-line
     /^[^`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~0123456789]+$/
   );
-  private phoneNumberRegex: RegExp = new RegExp(/^\+[0-9]+$/);
+  private phoneNumberRegex: RegExp = new RegExp(/^[0-9]+$/);
 
   public validateEmail = async (value: string) => {
     if (!this.isEmailRegexValid(value)) {
       throw new EmailRegexError();
     }
 
-    await this.isEmailTakenDebounced(value).then((isTaken) => {
-      if (isTaken) {
-        throw new EmailTakenError();
-      }
-    });
+    const isTaken = await this.isEmailTakenDebounced(value);
+
+    if (isTaken) {
+      throw new EmailTakenError();
+    }
   };
 
   private isEmailRegexValid = (value: string) => {
@@ -60,7 +60,7 @@ export default class SignupValidation {
       Date.now() <
       this.isEmailTakenLastRequestMoment + USERNAME_CHECK_TIMEOUT
     ) {
-      return true; // cancel check
+      return false; // cancel check
     }
 
     return this.isEmailTaken(value);
@@ -71,7 +71,7 @@ export default class SignupValidation {
       throw new UsernameRegexError();
     }
 
-    await this.isUsernameTakenDebounced(value).then((isTaken) => {
+    this.isUsernameTakenDebounced(value).then((isTaken) => {
       if (isTaken) {
         throw new UsernameTakenError();
       }
@@ -100,7 +100,7 @@ export default class SignupValidation {
       Date.now() <
       this.isUsernameTakenLastRequestMoment + USERNAME_CHECK_TIMEOUT
     ) {
-      return true; // cancel check
+      return false; // cancel check
     }
 
     return this.isUsernameTaken(value);

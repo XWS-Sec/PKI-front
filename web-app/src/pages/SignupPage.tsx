@@ -1,13 +1,17 @@
 import { useContext, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import ErrorLabel from '../components/common/ErrorLabel';
 import InputWithLabel from '../components/common/InputWithLabel';
 import LoadingSpinner from '../components/common/LoadingSpinner';
-import AuthContext from '../context/auth-context';
+import AuthContext, { User } from '../context/auth-context';
 import CreateUserDto from '../dtos/create-user-dto';
+import { HttpStatusCode } from '../utils/http-status-code.enum';
+import localStorageUtil from '../utils/local-storage/local-storage-util';
 import SignupValidation from '../utils/signup-validation';
 
 const Signup = () => {
   const authContext = useContext(AuthContext);
+  const navigate = useNavigate();
   const signupValidation = new SignupValidation();
 
   // SignupValidation.validateEmail(value: string) and SignupValidation.validateUsername(value: string) use debounce, so we need refs
@@ -23,7 +27,7 @@ const Signup = () => {
   const [username, setUsername] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
-  const [dateOfBirth, setDateOfBirth] = useState('01/01/1990');
+  // const [dateOfBirth, setDateOfBirth] = useState('01/01/1990');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -34,7 +38,7 @@ const Signup = () => {
   const [usernameErrorText, setUsernameErrorText] = useState('');
   const [firstNameErrorText, setFirstNameErrorText] = useState('');
   const [lastNameErrorText, setLastNameErrorText] = useState('');
-  const [dateOfBirthErrorText, setDateOfBirthErrorText] = useState('');
+  // const [dateOfBirthErrorText, setDateOfBirthErrorText] = useState('');
   const [phoneNumberErrorText, setPhoneNumberErrorText] = useState('');
   const [passwordErrorText, setPasswordErrorText] = useState('');
   const [confirmPasswordErrorText, setConfirmPasswordErrorText] = useState('');
@@ -113,23 +117,23 @@ const Signup = () => {
     }
   };
 
-  const dateOfBirthChangeHandler = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const value = event.target.value;
-    setDateOfBirth(value);
-    setDateOfBirthErrorText('');
+  // const dateOfBirthChangeHandler = (
+  //   event: React.ChangeEvent<HTMLInputElement>
+  // ) => {
+  //   const value = event.target.value;
+  //   setDateOfBirth(value);
+  //   setDateOfBirthErrorText('');
 
-    if (!value) {
-      return;
-    }
+  //   if (!value) {
+  //     return;
+  //   }
 
-    try {
-      signupValidation.validateDateOfBirth(value);
-    } catch (error: any) {
-      setDateOfBirthErrorText(error.message);
-    }
-  };
+  //   try {
+  //     signupValidation.validateDateOfBirth(value);
+  //   } catch (error: any) {
+  //     setDateOfBirthErrorText(error.message);
+  //   }
+  // };
 
   const phoneNumberChangeHandler = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -207,8 +211,8 @@ const Signup = () => {
       !firstNameErrorText &&
       lastName &&
       !lastNameErrorText &&
-      dateOfBirth &&
-      !dateOfBirthErrorText &&
+      // dateOfBirth &&
+      // !dateOfBirthErrorText &&
       phoneNumber &&
       !phoneNumberErrorText &&
       password &&
@@ -225,9 +229,10 @@ const Signup = () => {
         email: email,
         username: username,
         password: password,
-        firstName: firstName,
-        lastName: lastName,
-        dateOfBirth: dateOfBirth,
+        confirmPassword: confirmPassword,
+        name: firstName,
+        surname: lastName,
+        //dateOfBirth: dateOfBirth,
         isPrivate: isPrivate,
         profileDescription: profileDescription,
       };
@@ -237,7 +242,74 @@ const Signup = () => {
     }
   };
 
-  const register = async (createUserDto: CreateUserDto) => {};
+  const register = async (createUserDto: CreateUserDto) => {
+    const url: string = '/api/register';
+
+    setFetching(true);
+
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(createUserDto),
+    });
+
+    switch (response.status) {
+      case HttpStatusCode.OK:
+        setErrorText('');
+        await logIn();
+        break;
+      case HttpStatusCode.BAD_REQUEST:
+        setFetching(false);
+        setErrorText('Bad request.');
+        break;
+      default:
+        setFetching(false);
+        setErrorText('Unknown error occurred.');
+        break;
+    }
+  };
+
+  const logIn = async () => {
+    const url: string = '/api/login';
+    const data = { username: username, password: password };
+
+    setFetching(true);
+
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+
+    switch (response.status) {
+      case HttpStatusCode.OK:
+        setErrorText('');
+
+        const user: User = {
+          loggedIn: true,
+          username: username,
+        };
+
+        localStorageUtil.setUser(user);
+        authContext.updateAuthContext(user);
+
+        setFetching(false);
+        navigate('/');
+        break;
+      case HttpStatusCode.BAD_REQUEST:
+        setFetching(false);
+        setErrorText('Invalid credentials.');
+        break;
+      default:
+        setFetching(false);
+        setErrorText('Unknown error occurred.');
+        break;
+    }
+  };
 
   return (
     <div className='flex flex-col items-center md:h-screen bg-gray-200 overflow-y-auto'>
@@ -278,7 +350,7 @@ const Signup = () => {
         />
         <ErrorLabel text={lastNameErrorText} />
 
-        <div className='flex flex-wrap items-center'>
+        {/* <div className='flex flex-wrap items-center'>
           <p className='my-1 w-44 whitespace-nowrap'>Date of birth:</p>
           <input
             className='input p-1'
@@ -288,7 +360,7 @@ const Signup = () => {
             max='2010-12-31'
           />
         </div>
-        <ErrorLabel text={dateOfBirthErrorText} />
+        <ErrorLabel text={dateOfBirthErrorText} /> */}
 
         <InputWithLabel
           type='text'

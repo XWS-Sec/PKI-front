@@ -4,7 +4,7 @@ import LoadingSpinner from '../components/common/LoadingSpinner';
 import AuthContext, { User } from '../context/auth-context';
 import { HttpStatusCode } from '../utils/http-status-code.enum';
 import localStorageUtil from '../utils/local-storage/local-storage-util';
-import { sleep } from '../utils/sleep';
+// import { sleep } from '../utils/sleep';
 
 const LoginPage = () => {
   const authContext = useContext(AuthContext);
@@ -27,26 +27,26 @@ const LoginPage = () => {
     setPassword(event.target.value);
   };
 
-  const fakeLogin = async () => {
-    setFetching(true);
-    await sleep(1000);
-    setFetching(false);
+  // const fakeLogin = async () => {
+  //   setFetching(true);
+  //   await sleep(1000);
+  //   setFetching(false);
 
-    if (username === 'fake_user' && password === 'fakepass123') {
-      const user: User = {
-        //accessToken: 'fake.access_token.123',
-        loggedIn: true,
-        id: 1,
-        username: 'fake_user',
-      };
+  //   if (username === 'fake_user' && password === 'fakepass123') {
+  //     const user: User = {
+  //       //accessToken: 'fake.access_token.123',
+  //       loggedIn: true,
+  //       id: 1,
+  //       username: 'fake_user',
+  //     };
 
-      localStorageUtil.setUser(user);
-      authContext.updateAuthContext(user);
-      navigate('');
-    } else {
-      setErrorText('Invalid credentials!');
-    }
-  };
+  //     localStorageUtil.setUser(user);
+  //     authContext.updateAuthContext(user);
+  //     navigate('/');
+  //   } else {
+  //     setErrorText('Invalid credentials!');
+  //   }
+  // };
 
   const logIn = async () => {
     const url: string = '/api/login';
@@ -75,7 +75,7 @@ const LoginPage = () => {
         authContext.updateAuthContext(user);
 
         setFetching(false);
-        navigate('');
+        navigate('/');
         break;
       case HttpStatusCode.BAD_REQUEST:
         setFetching(false);
@@ -89,7 +89,7 @@ const LoginPage = () => {
   };
 
   const signUp = () => {
-    navigate('signup');
+    navigate('/signup');
   };
 
   const onInputKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
