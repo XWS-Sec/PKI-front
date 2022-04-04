@@ -10,7 +10,7 @@ import { HttpStatusCode } from '../utils/http-status-code.enum';
 import localStorageUtil from '../utils/local-storage/local-storage-util';
 import SignupValidation from '../validations/signup-validation';
 
-const SignupPage = () => {
+const CreateUserPage = () => {
   const authContext = useContext(AuthContext);
   const navigate = useNavigate();
   const signupValidation = new SignupValidation();
@@ -33,6 +33,7 @@ const SignupPage = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   //const [isPrivate, setIsPrivate] = useState(false);
+  const [role, setRole] = useState(Role.USER);
   //const [profileDescription, setProfileDescription] = useState('');
 
   const [emailErrorText, setEmailErrorText] = useState('');
@@ -196,6 +197,12 @@ const SignupPage = () => {
   //   setIsPrivate(event.target.value === 'private');
   // };
 
+  const roleChangeHandler = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const roleStr = event.target.value;
+    const role = Role[roleStr as keyof typeof Role];
+    setRole(role);
+  };
+
   // const profileDescriptionChangeHandler = (
   //   event: React.ChangeEvent<HTMLTextAreaElement>
   // ) => {
@@ -294,7 +301,7 @@ const SignupPage = () => {
         const user: User = {
           loggedIn: true,
           username: username,
-          role: Role.USER,
+          role: role,
         };
 
         localStorageUtil.setUser(user);
@@ -400,6 +407,14 @@ const SignupPage = () => {
           </select>
         </div> */}
 
+        <div className='flex flex-wrap items-center mb-2'>
+          <p className='my-1 w-44 whitespace-nowrap'>Role:</p>
+          <select className='input p-1' onChange={roleChangeHandler}>
+            <option value='User'>User</option>
+            <option value='Admin'>Admin</option>
+          </select>
+        </div>
+
         {/* <div className='flex flex-wrap items-center mb-3'>
           <p className='my-1'>About me:</p>
           <p className='ml-2 text-gray-500'>(optional)</p>
@@ -430,4 +445,4 @@ const SignupPage = () => {
   );
 };
 
-export default SignupPage;
+export default CreateUserPage;

@@ -1,4 +1,5 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import CreateUserPage from '../pages/CreateUserPage';
 import HomePage from '../pages/HomePage';
 import LoginPage from '../pages/LoginPage';
 import NotFoundPage from '../pages/NotFoundPage';
@@ -18,6 +19,7 @@ const MyRouter = (props: Props) => {
           element={props.loggedIn ? <HomePage /> : <LoginPage />}
         />
         <Route path='signup' element={<SignupPage />} />
+        <Route path='create-user' element={<CreateUserPage />} />
         <Route path='users/:username' element={<ProfilePage />} />
         <Route path='*' element={<NotFoundPage />} />
       </Routes>

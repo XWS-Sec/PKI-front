@@ -2,6 +2,7 @@ import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import AuthContext, { User } from '../context/auth-context';
+import { Role } from '../model/enums/role.enum';
 import { HttpStatusCode } from '../utils/http-status-code.enum';
 import localStorageUtil from '../utils/local-storage/local-storage-util';
 // import { sleep } from '../utils/sleep';
@@ -69,6 +70,7 @@ const LoginPage = () => {
         const user: User = {
           loggedIn: true,
           username: username,
+          role: Role.ADMIN, //todo: change
         };
 
         localStorageUtil.setUser(user);

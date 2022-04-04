@@ -1,4 +1,5 @@
 import { unsignedUser, User } from '../../context/auth-context';
+import { Role } from '../../model/enums/role.enum';
 import { LocalStorageItem } from './local-storage-item.enum';
 
 class LocalStorageUtil {
@@ -13,6 +14,7 @@ class LocalStorageUtil {
         loggedIn: true,
         id: this.getUserId(),
         username: this.getUsername(),
+        role: this.getRole(),
       };
 
       return user;
@@ -25,15 +27,16 @@ class LocalStorageUtil {
     //this.setAccessToken(user.accessToken);
     //this.setUserId(user.id);
     this.setUsername(user.username);
+    this.setRole(user.role);
   }
 
-  public getAccessToken(): string | null {
-    return localStorage.getItem(LocalStorageItem.ACCESS_TOKEN);
-  }
+  // public getAccessToken(): string | null {
+  //   return localStorage.getItem(LocalStorageItem.ACCESS_TOKEN);
+  // }
 
-  public setAccessToken(value: string): void {
-    localStorage.setItem(LocalStorageItem.ACCESS_TOKEN, value);
-  }
+  // public setAccessToken(value: string): void {
+  //   localStorage.setItem(LocalStorageItem.ACCESS_TOKEN, value);
+  // }
 
   public getUserId(): number {
     const userIdStr = localStorage.getItem(LocalStorageItem.USER_ID);
@@ -51,6 +54,19 @@ class LocalStorageUtil {
 
   public setUsername(value: string): void {
     localStorage.setItem(LocalStorageItem.USERNAME, value);
+  }
+  public getRole(): Role {
+    const roleStr = localStorage.getItem(LocalStorageItem.ROLE);
+
+    if (roleStr) {
+      return Role[roleStr as keyof typeof Role];
+    }
+
+    return Role.UNDEFINED;
+  }
+
+  public setRole(role: Role): void {
+    localStorage.setItem(LocalStorageItem.ROLE, role);
   }
 }
 

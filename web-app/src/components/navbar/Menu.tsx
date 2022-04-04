@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import AuthContext, { unsignedUser } from '../../context/auth-context';
 import { HttpStatusCode } from '../../utils/http-status-code.enum';
 import localStorageUtil from '../../utils/local-storage/local-storage-util';
+import { generateMenuLinks } from '../../utils/menu-util';
 import MenuToggleButton from './MenuToggleButton';
 import './navbar-menu-animation.css';
 
@@ -11,11 +12,7 @@ const Menu = (props: { toggleMenu: () => void }) => {
   const navigate = useNavigate();
 
   const renderMenuLinks = () => {
-    const menuLinks = [
-      { text: 'Home', pathname: '/' },
-      { text: 'Profile', pathname: `users/${authContext.user.username}` },
-    ];
-
+    const menuLinks = generateMenuLinks(authContext.user.role);
     return menuLinks.map((menuLink) => (
       <Link
         key={menuLink.pathname}
