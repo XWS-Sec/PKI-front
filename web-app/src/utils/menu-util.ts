@@ -1,5 +1,5 @@
-import MenuLink from '../model/menu-link';
 import { Role } from '../model/enums/role.enum';
+import MenuLink from '../model/menu-link';
 import localStorageUtil from './local-storage/local-storage-util';
 
 const AdminMenuLinks: MenuLink[] = [

@@ -1,17 +1,14 @@
-import { useContext, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ErrorLabel from '../components/common/ErrorLabel';
 import InputWithLabel from '../components/common/InputWithLabel';
 import LoadingSpinner from '../components/common/LoadingSpinner';
-import AuthContext, { User } from '../context/auth-context';
 import CreateUserDto from '../dtos/create-user-dto';
 import { Role } from '../model/enums/role.enum';
 import { HttpStatusCode } from '../utils/http-status-code.enum';
-import localStorageUtil from '../utils/local-storage/local-storage-util';
 import SignupValidation from '../validations/signup-validation';
 
 const CreateUserPage = () => {
-  const authContext = useContext(AuthContext);
   const navigate = useNavigate();
   const signupValidation = new SignupValidation();
 
@@ -199,8 +196,7 @@ const CreateUserPage = () => {
 
   const roleChangeHandler = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const roleStr = event.target.value;
-    const role = Role[roleStr as keyof typeof Role];
-    setRole(role);
+    setRole(roleStr as Role);
   };
 
   // const profileDescriptionChangeHandler = (
@@ -241,8 +237,9 @@ const CreateUserPage = () => {
         name: firstName,
         surname: lastName,
         //dateOfBirth: dateOfBirth,
-        phoneNumber: phoneNumber,
+        phone: phoneNumber,
         //isPrivate: isPrivate,
+        role: role,
         //profileDescription: profileDescription,
       };
       await register(createUserDto);
@@ -252,7 +249,7 @@ const CreateUserPage = () => {
   };
 
   const register = async (createUserDto: CreateUserDto) => {
-    const url: string = '/api/register';
+    const url: string = '/api/register/create';
 
     setFetching(true);
 
@@ -267,52 +264,13 @@ const CreateUserPage = () => {
     switch (response.status) {
       case HttpStatusCode.OK:
         setErrorText('');
-        await logIn();
+        setFetching(false);
+        alert('User successfully created.');
+        navigate('');
         break;
       case HttpStatusCode.BAD_REQUEST:
         setFetching(false);
         setErrorText('Bad request.');
-        break;
-      default:
-        setFetching(false);
-        setErrorText('Unknown error occurred.');
-        break;
-    }
-  };
-
-  const logIn = async () => {
-    const url: string = '/api/login';
-    const data = { username: username, password: password };
-
-    setFetching(true);
-
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
-
-    switch (response.status) {
-      case HttpStatusCode.OK:
-        setErrorText('');
-
-        const user: User = {
-          loggedIn: true,
-          username: username,
-          role: role,
-        };
-
-        localStorageUtil.setUser(user);
-        authContext.updateAuthContext(user);
-
-        setFetching(false);
-        navigate('/');
-        break;
-      case HttpStatusCode.BAD_REQUEST:
-        setFetching(false);
-        setErrorText('Invalid credentials.');
         break;
       default:
         setFetching(false);
@@ -411,7 +369,7 @@ const CreateUserPage = () => {
           <p className='my-1 w-44 whitespace-nowrap'>Role:</p>
           <select className='input p-1' onChange={roleChangeHandler}>
             <option value='User'>User</option>
-            <option value='Admin'>Admin</option>
+            {/* <option value='Admin'>Admin</option> */}
           </select>
         </div>
 

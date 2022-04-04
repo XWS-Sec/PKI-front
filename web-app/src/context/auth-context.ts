@@ -4,7 +4,7 @@ import { Role } from '../model/enums/role.enum';
 export interface User {
   //accessToken?: string;
   loggedIn: boolean;
-  id?: number;
+  id: number;
   username: string;
   role: Role;
 }

@@ -25,7 +25,7 @@ class LocalStorageUtil {
 
   public setUser(user: User): void {
     //this.setAccessToken(user.accessToken);
-    //this.setUserId(user.id);
+    this.setUserId(user.id);
     this.setUsername(user.username);
     this.setRole(user.role);
   }
@@ -59,7 +59,7 @@ class LocalStorageUtil {
     const roleStr = localStorage.getItem(LocalStorageItem.ROLE);
 
     if (roleStr) {
-      return Role[roleStr as keyof typeof Role];
+      return roleStr as Role;
     }
 
     return Role.UNDEFINED;

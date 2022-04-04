@@ -1,3 +1,5 @@
+import { Role } from '../model/enums/role.enum';
+
 export default interface CreateUserDto {
   email: string;
   username: string;
@@ -6,7 +8,8 @@ export default interface CreateUserDto {
   name: string;
   surname: string;
   //dateOfBirth: string;
-  phoneNumber: string;
+  phone: string;
   //isPrivate: boolean;
+  role?: Role;
   //profileDescription: string;
 }

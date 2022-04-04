@@ -5,7 +5,6 @@ import InputWithLabel from '../components/common/InputWithLabel';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import AuthContext, { User } from '../context/auth-context';
 import CreateUserDto from '../dtos/create-user-dto';
-import { Role } from '../model/enums/role.enum';
 import { HttpStatusCode } from '../utils/http-status-code.enum';
 import localStorageUtil from '../utils/local-storage/local-storage-util';
 import SignupValidation from '../validations/signup-validation';
@@ -234,7 +233,7 @@ const SignupPage = () => {
         name: firstName,
         surname: lastName,
         //dateOfBirth: dateOfBirth,
-        phoneNumber: phoneNumber,
+        phone: phoneNumber,
         //isPrivate: isPrivate,
         //profileDescription: profileDescription,
       };
@@ -291,10 +290,13 @@ const SignupPage = () => {
       case HttpStatusCode.OK:
         setErrorText('');
 
+        const data = await response.json();
+
         const user: User = {
           loggedIn: true,
-          username: username,
-          role: Role.USER,
+          id: data.id,
+          username: data.username,
+          role: data.role,
         };
 
         localStorageUtil.setUser(user);
