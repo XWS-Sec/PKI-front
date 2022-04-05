@@ -1,5 +1,38 @@
+import { useEffect, useState } from "react";
+import CreateCerfiticateModal from "../components/modals/CreateCertificate";
+import Certificate from "../dtos/certificate-dto";
+import { getCertificatesAsync } from "../services/server";
+import Table from "../Table";
+import { HttpStatusCode } from "../utils/http-status-code.enum";
+
 const HomePage = () => {
-  return <div>Home</div>;
+  const [certificates, setCertificates] = useState<Certificate[]>([]);
+
+  useEffect(() => {
+    loadCertificates();
+  }, []);
+
+  const loadCertificates = async () => {
+    const resp = await getCertificatesAsync();
+    if (resp.status == HttpStatusCode.OK) {
+      const certificates = await resp.json();
+      setCertificates(certificates);
+    }
+  };
+
+  const revokeCerfiticate = () => {};
+
+  const downloadCertificate = () => {};
+
+  return (
+    <div>
+      <Table
+        data={certificates}
+        revokeCerfiticate={revokeCerfiticate}
+        downloadCertificate={downloadCertificate}
+      />
+    </div>
+  );
 };
 
 export default HomePage;
