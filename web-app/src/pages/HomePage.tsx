@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import CreateCerfiticateModal from "../components/modals/CreateCertificate";
 import Certificate from "../dtos/certificate-dto";
-import { getCertificatesAsync } from "../services/server";
+import {
+  downloadCertificateAsync,
+  getCertificatesAsync,
+} from "../services/server";
 import Table from "../Table";
 import { HttpStatusCode } from "../utils/http-status-code.enum";
 
@@ -20,9 +23,11 @@ const HomePage = () => {
     }
   };
 
-  const revokeCerfiticate = () => {};
+  const revokeCerfiticate = async (serialNumber: string) => {};
 
-  const downloadCertificate = () => {};
+  const downloadCertificate = async (serialNumber: string) => {
+    window.location.href = `https://localhost:44321/api/Certificates/${serialNumber}`;
+  };
 
   return (
     <div>
