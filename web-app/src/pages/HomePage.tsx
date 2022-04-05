@@ -4,6 +4,7 @@ import Certificate from "../dtos/certificate-dto";
 import {
   downloadCertificateAsync,
   getCertificatesAsync,
+  revokeCertificateAsync,
 } from "../services/server";
 import Table from "../Table";
 import { HttpStatusCode } from "../utils/http-status-code.enum";
@@ -23,7 +24,12 @@ const HomePage = () => {
     }
   };
 
-  const revokeCerfiticate = async (serialNumber: string) => {};
+  const revokeCerfiticate = async (serialNumber: string) => {
+    const resp = await revokeCertificateAsync(serialNumber);
+    if (resp.status == HttpStatusCode.OK) {
+      loadCertificates();
+    }
+  };
 
   const downloadCertificate = async (serialNumber: string) => {
     window.location.href = `https://localhost:44321/api/Certificates/${serialNumber}`;

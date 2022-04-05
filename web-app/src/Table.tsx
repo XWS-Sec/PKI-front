@@ -23,6 +23,7 @@ const Table = (props: iTableProps) => {
           <th className="px-4 py-3">Valid until</th>
           <th className="px-4 py-3">Issuer</th>
           <th className="px-4 py-3">Owner</th>
+          <th className="px-4 py-3">Status</th>
           <th className="px-4 py-3 text-green-600 cursor-pointer">
             <PlusIcon />
           </th>
@@ -43,6 +44,7 @@ const Table = (props: iTableProps) => {
               <td className="px-4 py-4">{certificate.validTo}</td>
               <td className="px-4 py-4">{certificate.issuer}</td>
               <td className="px-4 py-4">{certificate.ownerName}</td>
+              <td className="px-4 py-4">{certificate.status}</td>
               <td className="px-4 py-4">
                 <div
                   className="hover:text-green-600"
