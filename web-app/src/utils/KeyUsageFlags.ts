@@ -9,27 +9,27 @@ const KeyUsageFlags = [
   },
   {
     name: "KeyCertSign",
-    value: 4,
+    value: 3,
   },
   {
     name: "KeyAgreement",
-    value: 8,
+    value: 4,
   },
   {
     name: "DataEncipherment",
-    value: 16,
+    value: 5,
   },
   {
     name: "KeyEncipherment",
-    value: 32,
+    value: 6,
   },
   {
     name: "NonRepudiation",
-    value: 64,
+    value: 7,
   },
   {
     name: "DigitalSignature",
-    value: 128,
+    value: 8,
   },
   {
     name: "DecipherOnly",
