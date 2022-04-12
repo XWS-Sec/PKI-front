@@ -33,7 +33,7 @@ const KeyUsageFlags = [
   },
   {
     name: "DecipherOnly",
-    value: 32768,
+    value: 9,
   },
 ];
 
